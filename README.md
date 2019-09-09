@@ -2,8 +2,22 @@
 
 This repository is based on the work of https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
 
-## Project Setup
 
+## How to run this project
+Main requirements
+- install the last stable python (3.7.4 when this was written)
+- install pipenv
+- install Docker
+
+```bash
+$ git clone https://github.com/miquelnez/django-js-fullstack-with-docker.git django-fullstack
+$ cd django-fullstack
+$ docker-compose down -v
+$ docker-compose up -d --build
+$ docker-compose exec web python manage.py migrate --noinput
+```
+
+## How this Project was Set up
 - install pipenv
 - install Docker
 
