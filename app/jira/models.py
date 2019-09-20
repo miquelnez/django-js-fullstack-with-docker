@@ -1,5 +1,5 @@
 from django.db import models
-from app.dashboard.models import Customer
+from dashboard.models import Customer
 from django.contrib.auth.models import User
 from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE_CASCADE
@@ -11,12 +11,18 @@ class JiraStatus(SafeDeleteModel):
     jira_id = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
 
+    def __str__(self):
+        return '%s - %s' % (self.jira_id, self.name)
+
 
 class JiraPriority(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     jira_id = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return '%s - %s' % (self.jira_id, self.name)
 
 
 class JiraIssueType(SafeDeleteModel):
@@ -26,6 +32,9 @@ class JiraIssueType(SafeDeleteModel):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     subtask = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '%s - %s' % (self.jira_id, self.name)
 
 
 class JiraUser(SafeDeleteModel):
@@ -37,6 +46,9 @@ class JiraUser(SafeDeleteModel):
     name = models.CharField(max_length=200)
     active = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return '%s - %s' % (self.key, self.displayName)
 
 
 class JiraProject(SafeDeleteModel):
@@ -63,19 +75,21 @@ class JiraIssue(SafeDeleteModel):
 
     jira_id = models.CharField(max_length=200)
     jira_key = models.CharField(max_length=200, unique=True)
-    summary = models.CharField(max_length=200, null=True)
-    description = models.CharField(max_length=200, null=True)
-    environment = models.CharField(max_length=200, null=True)
+    summary = models.CharField(max_length=200, blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
+    environment = models.CharField(max_length=200, blank=True, null=True)
     duedate = models.DateTimeField(
-        auto_now=False, auto_now_add=False, null=True)
+        auto_now=False, auto_now_add=False, blank=True, null=True)
     created = models.DateTimeField(
-        auto_now=False, auto_now_add=False, null=True)
-    assignee = models.ForeignKey(JiraUser, on_delete=models.PROTECT)
-    creator = models.ForeignKey(JiraUser, on_delete=models.PROTECT)
+        auto_now=False, auto_now_add=False, blank=True, null=True)
+    assignee = models.ForeignKey(
+        JiraUser, on_delete=models.PROTECT, related_name='assigned_to')
+    creator = models.ForeignKey(
+        JiraUser, on_delete=models.PROTECT, related_name='created_by')
     status = models.ForeignKey(JiraStatus, on_delete=models.PROTECT)
     priority = models.ForeignKey(JiraPriority, on_delete=models.PROTECT)
     issuetype = models.ForeignKey(JiraIssueType, on_delete=models.PROTECT)
     project = models.ForeignKey(JiraProject, on_delete=models.PROTECT)
 
     def __str__(self):
-        return '%s - %s' % (self.key, self.project.name)
+        return '%s - %s' % (self.jira_key, self.project.name)
