@@ -2,9 +2,10 @@
 
 This repository is based on the work of https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
 
-
 ## How to run this project
+
 Main requirements
+
 - install the last stable python (3.7.4 when this was written)
 - install pipenv
 - install Docker
@@ -18,13 +19,15 @@ $ docker-compose exec web python manage.py migrate --noinput
 ```
 
 ## How this Project was Set up
+
 - install pipenv
 - install Docker
 
-``` bash
+```bash
 $ mkdir django-on-docker && cd django-on-docker
 $ mkdir app && cd app
 $ pipenv install django==2.2.5
+$ pipenv install django-safedelete
 $ pipenv shell
 (app)$ django-admin.py startproject hello_django .
 (app)$ python manage.py migrate
@@ -34,12 +37,14 @@ $ pipenv shell
 It should be working on http://localhost:8000/
 
 ## Setup Docker
+
 ```bash
 (app)$ deactivate # exits from the current pipenv
 $ vim app/Dockerfile
 ```
 
 fill the app/Dockerfile like this:
+
 ```bash
 # pull official base image
 FROM python:3.7.4-alpine
@@ -62,6 +67,7 @@ COPY . /usr/src/app/
 ```
 
 Then add a docker-compose.yml to the project root (edit the services/web/environment/SECRET_KEY value with the one on app/hello_django/settings.py ):
+
 ```bash
 $ vim docker-compose.yml
 ```
@@ -148,7 +154,7 @@ volumes:
   postgres_data:
 ```
 
-To persist the data beyond the life of the container we configured a volume. This config will bind *postgres_data* to the "/var/lib/postgresql/data/" directory in the container.
+To persist the data beyond the life of the container we configured a volume. This config will bind _postgres_data_ to the "/var/lib/postgresql/data/" directory in the container.
 
 Remember to edit the django settings.py to use this database
 
@@ -176,6 +182,7 @@ $ vim app/Dockerfile
 ```
 
 fill the app/Dockerfile like this:
+
 ```bash
 # pull official base image
 FROM python:3.7.4-alpine
@@ -204,13 +211,15 @@ RUN pipenv install --skip-lock --system --dev
 COPY . /usr/src/app/
 ```
 
-
 Finally, build the new image and spin up the two containers and do the migrations:
+
 ```bash
 $ docker-compose up -d --build
 $ docker-compose exec web python manage.py migrate --noinput
 ```
+
 You should get something like this:
+
 ```
 Running migrations:
   Applying contenttypes.0001_initial... OK
@@ -232,7 +241,8 @@ Running migrations:
   Applying sessions.0001_initial... OK
 ```
 
-If you get and error **django.db.utils.OperationalError: FATAL:  database "hello_django_dev" does not exist** then try to remove the docker volumes first:
+If you get and error **django.db.utils.OperationalError: FATAL: database "hello_django_dev" does not exist** then try to remove the docker volumes first:
+
 ```bash
 $ docker-compose down -v
 $ docker-compose build
@@ -243,7 +253,7 @@ $ docker-compose exec web python manage.py migrate --noinput
 
 You can also enter on the database to check if all is ok (but don't edit any schema):
 
-``` bash
+```bash
 docker-compose exec db psql --username=hello_django --dbname=hello_django_dev
 WARNING: The b_jgc variable is not set. Defaulting to a blank string.
 psql (11.5)
@@ -281,6 +291,7 @@ hello_django_dev=# \dt
 
 hello_django_dev=# \q
 ```
+
 Also, we can check that our database volume was created
 
 ```bash
