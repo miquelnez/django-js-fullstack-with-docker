@@ -19,5 +19,6 @@ from django.urls import include, path
 urlpatterns = [
     path('jira/', include('jira.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('rest/', include('rest.urls')),
     path('admin/', admin.site.urls),
 ]
