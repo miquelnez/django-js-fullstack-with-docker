@@ -8,7 +8,8 @@ from .serializers import (
     UserSerializer, GroupSerializer,
     CustomerSerializer, ProjectSerializer,
     JiraStatusSerializer, JiraPrioritySerializer, JiraIssueTypeSerializer,
-    JiraUserSerializer, JiraProjectSerializer, JiraIssueSerializer
+    JiraUserSerializer, JiraProjectSerializer, JiraProjectFullSerializer,
+    JiraIssueSerializer
 )
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -93,7 +94,7 @@ class JiraProjectViewSet(viewsets.ReadOnlyModelViewSet):
     API endpoint that allows JiraProject to be viewed or edited.
     """
     queryset = JiraProject.objects.all()
-    serializer_class = JiraProjectSerializer
+    serializer_class = JiraProjectFullSerializer
 
 
 class JiraIssueViewSet(viewsets.ReadOnlyModelViewSet):

@@ -1,5 +1,5 @@
 from django.db import models
-from dashboard.models import Customer
+from dashboard.models import Customer, Project
 from django.contrib.auth.models import User
 from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE_CASCADE
@@ -57,6 +57,7 @@ class JiraProject(SafeDeleteModel):
     name = models.CharField(max_length=200)
     description = models.TextField(
         max_length=512, verbose_name="Description", blank=True)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
     jira_id = models.CharField(max_length=200)
     jira_key = models.CharField(max_length=200, unique=True)
@@ -89,7 +90,7 @@ class JiraIssue(SafeDeleteModel):
     status = models.ForeignKey(JiraStatus, on_delete=models.PROTECT)
     priority = models.ForeignKey(JiraPriority, on_delete=models.PROTECT)
     issuetype = models.ForeignKey(JiraIssueType, on_delete=models.PROTECT)
-    project = models.ForeignKey(JiraProject, on_delete=models.PROTECT)
+    jira_project = models.ForeignKey(JiraProject, on_delete=models.PROTECT, related_name='issues')
 
     def __str__(self):
-        return '%s - %s' % (self.jira_key, self.project.name)
+        return '%s - %s' % (self.jira_key, self.jira_project.name)

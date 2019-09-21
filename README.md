@@ -249,6 +249,8 @@ $ docker-compose build
 $ docker-compose up -d
 # or use docker-compose up -d --build
 $ docker-compose exec web python manage.py migrate --noinput
+
+$ docker-compose logs -f # to see the logs
 ```
 
 You can also enter on the database to check if all is ok (but don't edit any schema):

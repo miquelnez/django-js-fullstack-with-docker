@@ -79,10 +79,13 @@ class JiraProjectSmallSerializer(serializers.ModelSerializer):
 
 class JiraIssueSerializer(serializers.ModelSerializer):
 
+    # parent_id = serializers.PrimaryKeyRelatedField(
+    #     queryset=JiraProject.objects.all(), source='jira_project.id')
+
     status = JiraStatusSerializer(many=False)
     priority = JiraPrioritySerializer(many=False)
     issuetype = JiraIssueTypeSerializer(many=False)
-    project = JiraProjectSmallSerializer(many=False)
+    project = JiraProjectSmallSerializer(many=False, source='jira_project')
     assignee = JiraUserSerializer(many=False)
     creator = JiraUserSerializer(many=False)
 
@@ -91,3 +94,12 @@ class JiraIssueSerializer(serializers.ModelSerializer):
         fields = ['url', 'jira_id', 'jira_key', 'summary', 'description',
                   'environment', 'duedate', 'created', 'assignee', 'creator',
                   'status', 'priority', 'issuetype', 'project']
+
+
+class JiraProjectFullSerializer(serializers.ModelSerializer):
+
+    issues = JiraIssueSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = JiraProject
+        fields = ['id', 'name', 'issues']
