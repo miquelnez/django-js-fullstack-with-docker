@@ -250,7 +250,12 @@ $ docker-compose up -d
 # or use docker-compose up -d --build
 $ docker-compose exec web python manage.py migrate --noinput
 
-$ docker-compose logs -f # to see the logs
+# to see the logs
+$ docker-compose logs -f
+# to dumpdata
+$ docker-compose exec web python manage.py dumpdata --indent 2 > db.json
+# to loaddata
+$ docker-compose exec web python manage.py loaddata db.json
 ```
 
 You can also enter on the database to check if all is ok (but don't edit any schema):
