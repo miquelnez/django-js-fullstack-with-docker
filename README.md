@@ -13,9 +13,14 @@ Main requirements
 ```bash
 $ git clone https://github.com/miquelnez/django-js-fullstack-with-docker.git django-fullstack
 $ cd django-fullstack
+$ git checkout branch-name
 $ docker-compose down -v
 $ docker-compose up -d --build
 $ docker-compose exec web python manage.py migrate --noinput
+$ docker-compose exec web python manage.py createsuperuser
+$ docker-compose exec web python manage.py loaddata db.json
+
+$ docker-compose logs -f
 ```
 
 ## How this Project was Set up
