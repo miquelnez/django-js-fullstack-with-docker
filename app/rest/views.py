@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from todolist.models import TodoList, Todo
 from dashboard.models import Customer, Project
 from jira.models import (
     JiraStatus, JiraPriority, JiraIssueType, JiraUser,
@@ -9,7 +10,8 @@ from .serializers import (
     CustomerSerializer, ProjectSerializer,
     JiraStatusSerializer, JiraPrioritySerializer, JiraIssueTypeSerializer,
     JiraUserSerializer, JiraProjectSerializer, JiraProjectFullSerializer,
-    JiraIssueSerializer
+    JiraIssueSerializer,
+    TodoListFullSerializer, TodoSerializer
 )
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -35,12 +37,31 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+''' todolist viewsets '''
+
+
+class TodoListViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows TodoList to be viewed or edited.
+    """
+    queryset = TodoList.objects.all()
+    serializer_class = TodoListFullSerializer
+
+
+class TodoViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Todo to be viewed or edited.
+    """
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+
+
 ''' dashboard viewsets '''
 
 
 class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows customers to be viewed or edited.
+    API endpoint that allows Customer to be viewed or edited.
     """
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
@@ -48,7 +69,7 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows customers to be viewed or edited.
+    API endpoint that allows Project to be viewed or edited.
     """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer

@@ -448,3 +448,184 @@ $ docker-compose down -v
 $ docker-compose up -d --build
 $ docker-compose exec web python manage.py migrate --noinput
 ```
+
+# TODOLIST
+
+- GET http://localhost:8000/rest/todolist/
+
+```json
+[
+  {
+    "id": 1,
+    "title": "ATP angular",
+    "user": {
+      "id": 2,
+      "url": "http://localhost:8000/rest/users/2/",
+      "username": "miquel",
+      "email": "",
+      "groups": []
+    },
+    "todos": [
+      {
+        "id": 5,
+        "title": "Create and tests services",
+        "status": "IN",
+        "created_at": "2019-09-29T15:31:16.106297Z",
+        "updated_at": "2019-09-29T15:31:16.106320Z"
+      },
+      {
+        "id": 4,
+        "title": "Create angular project",
+        "status": "IN",
+        "created_at": "2019-09-29T15:31:02.174625Z",
+        "updated_at": "2019-09-29T15:31:02.174649Z"
+      },
+      {
+        "id": 3,
+        "title": "Deploy django rest",
+        "status": "IN",
+        "created_at": "2019-09-29T15:30:47.751707Z",
+        "updated_at": "2019-09-29T15:30:47.751760Z"
+      },
+      {
+        "id": 2,
+        "title": "learn how to unit testing angular",
+        "status": "IN",
+        "created_at": "2019-09-29T15:25:11.189935Z",
+        "updated_at": "2019-09-29T15:25:11.189959Z"
+      },
+      {
+        "id": 1,
+        "title": "learn angular",
+        "status": "IN",
+        "created_at": "2019-09-29T15:24:49.340386Z",
+        "updated_at": "2019-09-29T15:24:49.340430Z"
+      }
+    ],
+    "created_at": "2019-09-29T15:24:31.197558Z",
+    "updated_at": "2019-09-29T15:24:31.197586Z"
+  },
+  {
+    "id": 2,
+    "title": "ATP django",
+    "user": {
+      "id": 4,
+      "url": "http://localhost:8000/rest/users/4/",
+      "username": "amaris-vlc",
+      "email": "",
+      "groups": []
+    },
+    "todos": [
+      {
+        "id": 7,
+        "title": "git clone and serve via docker",
+        "status": "IN",
+        "created_at": "2019-09-29T15:32:19.398997Z",
+        "updated_at": "2019-09-29T15:32:19.399036Z"
+      },
+      {
+        "id": 6,
+        "title": "Install docker",
+        "status": "IN",
+        "created_at": "2019-09-29T15:31:57.377124Z",
+        "updated_at": "2019-09-29T15:31:57.377149Z"
+      }
+    ],
+    "created_at": "2019-09-29T15:31:40.326554Z",
+    "updated_at": "2019-09-29T15:31:40.326579Z"
+  }
+]
+```
+
+- GET http://localhost:8000/rest/todolist/2/
+
+```json
+{
+  "id": 2,
+  "title": "ATP django",
+  "user": {
+    "id": 4,
+    "url": "http://localhost:8000/rest/users/4/",
+    "username": "amaris-vlc",
+    "email": "",
+    "groups": []
+  },
+  "todos": [
+    {
+      "id": 7,
+      "title": "git clone and serve via docker",
+      "status": "IN",
+      "created_at": "2019-09-29T15:32:19.398997Z",
+      "updated_at": "2019-09-29T15:32:19.399036Z"
+    },
+    {
+      "id": 6,
+      "title": "Install docker",
+      "status": "IN",
+      "created_at": "2019-09-29T15:31:57.377124Z",
+      "updated_at": "2019-09-29T15:31:57.377149Z"
+    }
+  ],
+  "created_at": "2019-09-29T15:31:40.326554Z",
+  "updated_at": "2019-09-29T15:31:40.326579Z"
+}
+```
+
+- GET http://localhost:8000/rest/todolist/todos/
+
+```json
+[
+  {
+    "id": 1,
+    "title": "learn angular",
+    "todo_list": 1,
+    "status": "IN",
+    "created_at": "2019-09-29T15:24:49.340386Z",
+    "updated_at": "2019-09-29T15:24:49.340430Z"
+  },
+  {
+    "id": 2,
+    "title": "learn how to unit testing angular",
+    "todo_list": 1,
+    "status": "IN",
+    "created_at": "2019-09-29T15:25:11.189935Z",
+    "updated_at": "2019-09-29T15:25:11.189959Z"
+  }
+]
+```
+
+```bash
+curl -d '{
+    "title": "curl posts on django",
+    "todo_list": 1,
+    "status": "CO"
+}' -H "Content-Type: application/json" -X POST http://localhost:8000/rest/todolist/todos/
+
+# {"id":9,"title":"curl posts on django","todo_list":1,"status":"CO","created_at":"2019-09-29T18:39:08.268681Z","updated_at":"2019-09-29T18:39:08.268739Z"}%
+
+# web_1  | [29/Sep/2019 18:39:08] "POST /rest/todolist/todos/ HTTP/1.1" 201 153
+
+
+curl -d '{
+    "title": "curl posts/put on django",
+    "todo_list": 2,
+    "status": "AR"
+}' -H "Content-Type: application/json" -X PUT http://localhost:8000/rest/todolist/todos/9/
+
+# {"id":9,"title":"curl posts/put on django","todo_list":2,"status":"AR","created_at":"2019-09-29T18:39:08.268681Z","updated_at":"2019-09-29T18:43:45.923965Z"}%
+
+# web_1  | [29/Sep/2019 18:43:45] "PUT /rest/todolist/todos/9/ HTTP/1.1" 200 157
+```
+
+- GET http://localhost:8000/rest/todolist/todos/8/
+
+```json
+{
+  "id": 8,
+  "title": "post todo",
+  "todo_list": 2,
+  "status": "IN",
+  "created_at": "2019-09-29T18:34:59.334903Z",
+  "updated_at": "2019-09-29T18:34:59.334928Z"
+}
+```

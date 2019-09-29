@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from todolist.models import TodoList, Todo
 from dashboard.models import Customer, Project
 from jira.models import (
     JiraStatus, JiraPriority, JiraIssueType, JiraUser,
@@ -12,13 +13,48 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ['id', 'url', 'username', 'email', 'groups']
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ['url', 'name']
+
+
+''' Todo List models '''
+
+
+class TodoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = ['id', 'title', 'todo_list',
+                  'status', 'created_at', 'updated_at']
+
+
+class TodoSmallSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = ['id', 'title',
+                  'status', 'created_at', 'updated_at']
+
+
+class TodoListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TodoList
+        fields = ['id', 'title', 'user', 'created_at', 'updated_at']
+
+
+class TodoListFullSerializer(serializers.ModelSerializer):
+
+    todos = TodoSmallSerializer(many=True, read_only=True)
+    user = UserSerializer(many=False)
+    # user = UserSerializer(many=False)
+
+    class Meta:
+        model = TodoList
+        fields = ['id', 'title', 'user',
+                  'todos', 'created_at', 'updated_at']
 
 
 ''' Dashboard models '''
