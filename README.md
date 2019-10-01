@@ -13,9 +13,11 @@ Main requirements
 ```bash
 $ git clone https://github.com/miquelnez/django-js-fullstack-with-docker.git django-fullstack
 $ cd django-fullstack
+$ git branch -a
 $ git checkout branch-name
 $ docker-compose down -v
 $ docker-compose up -d --build
+$ docker-compose exec web python manage.py makemigrations
 $ docker-compose exec web python manage.py migrate --noinput
 $ docker-compose exec web python manage.py createsuperuser
 $ docker-compose exec web python manage.py loaddata db.json
@@ -267,7 +269,6 @@ You can also enter on the database to check if all is ok (but don't edit any sch
 
 ```bash
 docker-compose exec db psql --username=hello_django --dbname=hello_django_dev
-WARNING: The b_jgc variable is not set. Defaulting to a blank string.
 psql (11.5)
 Type "help" for help.
 

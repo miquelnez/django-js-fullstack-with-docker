@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1 # python -B
 ENV PYTHONUNBUFFERED 1 # python -u
+ENV DJANGO_SETTINGS_MODULE hello_django.settings
 
 # install psycopg2
 RUN apk update \
